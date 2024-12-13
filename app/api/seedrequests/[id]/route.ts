@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
+import type { RouteHandlerContext } from "next/server";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } } // Ensure params is destructured correctly
+  context: RouteHandlerContext<{ id: string }> // Correct type for params
 ) {
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
 
     // Extract the ID from the route params
-    const id = params?.id;
+    const id = context.params.id;
 
     if (!id) {
       return NextResponse.json({ message: "Missing ID in request" }, { status: 400 });
