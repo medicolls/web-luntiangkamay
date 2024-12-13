@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } } // Ensure params is destructured correctly
+) {
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
 
-    // Extract the ID from the request params
+    // Extract the ID from the route params
     const id = params?.id;
 
     if (!id) {
