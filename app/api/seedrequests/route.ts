@@ -4,7 +4,7 @@ import SeedRequest from "@/models/SeedRequest";
 import User from "@/models/User";
 
 // Unified handler for all methods
-export async function GET(req: NextRequest) {
+export async function GET() { // `req` removed because it’s unused
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
