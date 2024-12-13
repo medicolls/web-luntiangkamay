@@ -25,7 +25,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
 
     // Prepare the update data
-    const updateData: Record<string, any> = { status };
+    const updateData: Record<string, string> = { status };
     if (status === "rejected" && reason) {
       updateData.rejectReason = reason; // Add the reject reason only if the status is "rejected"
     }

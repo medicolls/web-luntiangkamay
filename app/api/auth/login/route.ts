@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User'; // Still use the model to query the `users` collection
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secretkey';
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
