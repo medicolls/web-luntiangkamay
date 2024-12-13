@@ -2,17 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { FiMenu, FiX, FiHome, FiFileText, FiUsers, FiUser, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiFileText, FiUsers} from "react-icons/fi";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleLogout = () => {
-    console.log("User logged out");
   };
 
   return (
