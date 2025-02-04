@@ -2,85 +2,107 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { FiMenu, FiX, FiHome, FiFileText, FiUsers} from "react-icons/fi";
+import { Layout, Menu, Drawer, Button } from "antd";
+import { FiMenu, FiHome, FiFileText, FiUsers } from "react-icons/fi";
+
+const { Sider, Content } = Layout;
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const toggleDrawer = () => {
+    setIsDrawerVisible(!isDrawerVisible);
   };
 
+  const sidebarMenuItems = [
+    {
+      key: "dashboard",
+      icon: <FiHome size={18} />,
+      label: <Link href="/pages/dashboard">Dashboard</Link>,
+    },
+    {
+      key: "requests",
+      icon: <FiFileText size={18} />,
+      label: <Link href="/pages/requests">Requests</Link>,
+    },
+    {
+      key: "users",
+      icon: <FiUsers size={18} />,
+      label: <Link href="/pages/users">Users</Link>,
+    },
+  ];
+
   return (
-    <div className="flex h-screen">
-      {/* Mobile Sidebar Toggle */}
-      <button
-        className="lg:hidden fixed top-4 left-4 z-20 bg-green-700 text-white p-3 rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-        onClick={toggleSidebar}
+    <Layout style={{ minHeight: "100vh" }}>
+      {/* Mobile Drawer Toggle */}
+      <Button
+        type="primary"
+        onClick={toggleDrawer}
+        style={{
+          position: "fixed",
+          top: 20,
+          left: 20,
+          zIndex: 1000,
+          display: "inline-block",
+        }}
       >
-        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-      </button>
+        <FiMenu size={18} />
+      </Button>
 
-      {/* Sidebar */}
-      <div
-        className={`fixed lg:static h-full bg-green-900 text-gray-200 w-64 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 lg:translate-x-0 flex flex-col shadow-xl`}
+      {/* Drawer for Mobile */}
+      <Drawer
+        title="Luntiang Kamay"
+        placement="left"
+        onClose={toggleDrawer}
+        visible={isDrawerVisible}
+        bodyStyle={{ padding: 0 }}
       >
-        {/* Sidebar Header */}
-        <div className="flex items-center justify-center p-6 border-b border-green-700">
-          <h2 className="text-xl font-bold text-center tracking-wide">
-            Luntiang Kamay
-          </h2>
-        </div>
+        <Menu
+          theme="dark"
+          mode="vertical"
+          items={sidebarMenuItems}
+          defaultSelectedKeys={["dashboard"]}
+        />
+      </Drawer>
 
-        {/* Navigation */}
-        <nav className="flex-grow">
-          <ul className="space-y-4 mt-6 px-4">
-            <li>
-              <Link
-                href="/pages/dashboard"
-                className="flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-green-800 hover:text-white transition"
-              >
-                <FiHome size={20} />
-                <span className="text-sm font-medium">Dashboard</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/pages/requests"
-                className="flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-green-800 hover:text-white transition"
-              >
-                <FiFileText size={20} />
-                <span className="text-sm font-medium">Requests</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/pages/users"
-                className="flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-green-800 hover:text-white transition"
-              >
-                <FiUsers size={20} />
-                <span className="text-sm font-medium">Users</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-green-700 text-center text-sm text-gray-400">
-          <p>© 2024 Luntiang Kamay</p>
+      {/* Sidebar for Desktop */}
+      <Sider
+        breakpoint="lg"
+        collapsedWidth="0"
+        style={{ backgroundColor: "#003300" }}
+      >
+        <div style={{ textAlign: "center", padding: "16px", color: "#ffffff" }}>
+          <h2 style={{ margin: 0, fontSize: "18px" }}>Luntiang Kamay</h2>
         </div>
-      </div>
+        <Menu
+          theme="dark"
+          mode="inline"
+          items={sidebarMenuItems}
+          defaultSelectedKeys={["dashboard"]}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            width: "100%",
+            textAlign: "center",
+            color: "rgba(255, 255, 255, 0.65)",
+            fontSize: "12px",
+          }}
+        >
+          © 2024 Luntiang Kamay
+        </div>
+      </Sider>
 
       {/* Main Content */}
-      <div className="flex-grow flex flex-col">
-        {/* Content */}
-        <main className="flex-grow p-6 bg-gray-50">
+      <Layout>
+        <Content style={{ margin: "24px 16px", background: "#fff", padding: 24 }}>
           {/* Placeholder for dynamic content */}
-        </main>
-      </div>
-    </div>
+          <h1>Welcome to the Dashboard</h1>
+          <p>Manage your content here.</p>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 

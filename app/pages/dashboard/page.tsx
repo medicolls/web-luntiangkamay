@@ -1,14 +1,28 @@
 "use client";
 
 import Layout from "@/components/Layout";
+import { Typography, Card } from "antd";
+
+const { Title, Paragraph } = Typography;
 
 const Dashboard = () => {
   return (
     <Layout>
-      <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-      <p className="text-gray-600 mt-4">
-        Welcome to the admin dashboard. Here, you can manage requests and users.
-      </p>
+      <Card
+        bordered={false}
+        style={{
+          backgroundColor: "#f5f5f5",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Title level={2} style={{ color: "#2f4f4f", marginBottom: "16px" }}>
+          Dashboard
+        </Title>
+        <Paragraph style={{ fontSize: "16px", color: "#595959" }}>
+          Welcome to the admin dashboard. Here, you can manage requests and
+          users.
+        </Paragraph>
+      </Card>
     </Layout>
   );
 };

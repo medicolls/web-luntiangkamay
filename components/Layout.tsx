@@ -2,66 +2,69 @@
 
 import React from "react";
 import Sidebar from "./Sidebar";
+import { Layout as AntLayout, Avatar, Button, Typography, Space } from "antd";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import Link from "next/link";
+
+const { Header, Content } = AntLayout;
+const { Title } = Typography;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const handleLogout = () => {
+    console.log("User logged out");
+  };
+
   return (
-    <div className="flex h-screen">
+    <AntLayout style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-grow">
+      <AntLayout>
         {/* Header */}
-        <header className="bg-gray-100 border-b border-gray-300 p-4 flex justify-between items-center">
-          <h1 className="text-lg font-semibold text-gray-800">Admin Panel</h1>
-          <div className="flex space-x-4 items-center">
-            <a
-              href="/pages/profile"
-              className="flex items-center space-x-1 text-gray-800 hover:text-green-700 transition"
+        <Header
+          style={{
+            backgroundColor: "#f5f5f5",
+            padding: "0 24px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
+          <Title level={4} style={{ margin: 0 }}>
+            Admin Panel
+          </Title>
+
+          <Space size="large">
+            {/* Profile Link */}
+            <Link href="/pages/profile">
+              <Space>
+                <Avatar size="large" icon={<UserOutlined />} />
+                <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                  Profile
+                </span>
+              </Space>
+            </Link>
+
+            {/* Logout Button */}
+            <Button
+              type="text"
+              danger
+              icon={<LogoutOutlined />}
+              onClick={handleLogout}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 15a6 6 0 11-7.5 0"
-                />
-              </svg>
-              <span className="text-sm font-medium">Profile</span>
-            </a>
-            <button
-              onClick={() => console.log("User logged out")}
-              className="flex items-center space-x-1 text-red-600 hover:text-red-800 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 9V5.25a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25V19.5a2.25 2.25 0 002.25 2.25h6.75a2.25 2.25 0 002.25-2.25V15"
-                />
-              </svg>
-              <span className="text-sm font-medium">Logout</span>
-            </button>
-          </div>
-        </header>
+              Logout
+            </Button>
+          </Space>
+        </Header>
 
         {/* Content */}
-        <main className="flex-grow p-6 bg-gray-50">{children}</main>
-      </div>
-    </div>
+        <Content style={{ padding: "24px", backgroundColor: "#fff" }}>
+          {children}
+        </Content>
+      </AntLayout>
+    </AntLayout>
   );
 };
 
