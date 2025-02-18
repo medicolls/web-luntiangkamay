@@ -10,16 +10,24 @@ const Dashboard = () => {
     totalRequests: 0,
     pendingRequests: 0,
     approvedRequests: 0,
-    releasedRequests: 0, // ✅ New: Released requests count
+    releasedRequests: 0,
     totalUsers: 0,
   });
 
   const [loading, setLoading] = useState(true);
 
+  // Define proper types
   interface RequestData {
     status: string;
   }
-  
+
+  interface UserData {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,17 +35,17 @@ const Dashboard = () => {
           fetch("/api/seedrequests"),
           fetch("/api/users"),
         ]);
-  
+
         const requestsData: RequestData[] = await requestsRes.json();
-        const usersData: any[] = await usersRes.json();
-  
+        const usersData: UserData[] = await usersRes.json();
+
         // ✅ Use typed filtering
         const totalRequests = requestsData.length;
         const pendingRequests = requestsData.filter((r) => r.status === "pending").length;
         const approvedRequests = requestsData.filter((r) => r.status === "approved").length;
         const releasedRequests = requestsData.filter((r) => r.status === "released").length;
         const totalUsers = usersData.length;
-  
+
         setData({
           totalRequests,
           pendingRequests,
@@ -51,13 +59,12 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
-  }, []);  
+  }, []);
 
   return (
     <Layout>
-
       {/* Loading Indicator */}
       {loading ? (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -98,7 +105,7 @@ const Dashboard = () => {
             </Card>
           </Col>
 
-          {/* Released Requests - ✅ New */}
+          {/* Released Requests */}
           <Col xs={24} sm={12} md={6}>
             <Card bordered={false} style={{ backgroundColor: "#f0f5ff" }}>
               <Statistic
