@@ -2,16 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
-interface RouteParams {
-  params: { id: string };
-}
-
-interface UpdateData {
-  status: string;
-  rejectReason?: string;
-}
-
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect();
 
@@ -34,7 +28,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const updateData: UpdateData = { status };
+    const updateData: { status: string; rejectReason?: string } = { status };
     if (status === "rejected" && reason) {
       updateData.rejectReason = reason;
     }
