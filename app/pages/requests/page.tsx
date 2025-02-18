@@ -48,14 +48,20 @@ const Requests = () => {
   const updateRequestStatus = async (id: string, status: string, reason?: string) => {
     try {
       const response = await fetch(`/api/seedrequests/${id}`, {
-        method: "PATCH",
+        method: "PUT", // ✅ Changed PATCH to PUT to match Next.js route
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reason ? { status, reason } : { status }),
       });
-      if (!response.ok) throw new Error("Failed to update request status");
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || "Failed to update request status");
+      }
+
+      const updatedRequest = await response.json();
 
       setRequests((prev) =>
-        prev.map((req) => (req._id === id ? { ...req, status } : req))
+        prev.map((req) => (req._id === id ? updatedRequest : req))
       );
 
       message.success(`Request marked as ${status}`);
