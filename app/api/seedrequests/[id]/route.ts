@@ -5,7 +5,7 @@ import SeedRequest from "@/models/SeedRequest";
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } } 
+  { params } : { params: Promise<{ id: string }> }
 ) {
   try {
     // Ensure MongoDB connection
@@ -13,7 +13,7 @@ export async function PUT(
       await dbConnect();
     }
 
-    const { id } = context.params; 
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(
