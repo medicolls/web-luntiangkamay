@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
@@ -7,7 +8,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
+    // Ensure MongoDB connection is established before proceeding
+    if (mongoose.connection.readyState === 0) {
+      await dbConnect();
+    }
 
     const id = params.id;
 
@@ -24,6 +28,14 @@ export async function PUT(
     if (!status) {
       return NextResponse.json(
         { message: "Missing status in request body" },
+        { status: 400 }
+      );
+    }
+
+    // Ensure the ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { message: "Invalid ID format" },
         { status: 400 }
       );
     }
@@ -48,7 +60,7 @@ export async function PUT(
     return NextResponse.json(updatedRequest, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "Internal server error", error },
+      { message: "Internal server error", error: error.message },
       { status: 500 }
     );
   }
