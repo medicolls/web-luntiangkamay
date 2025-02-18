@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } } // Correctly typed params
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
 
     // Extract the ID from the route params
-    const id = params.id;
+    const { id } = context.params;
 
     if (!id) {
       return NextResponse.json({ message: "Missing ID in request" }, { status: 400 });
@@ -30,7 +30,7 @@ export async function PATCH(
     // Prepare the update data
     const updateData: Record<string, string> = { status };
     if (status === "rejected" && reason) {
-      updateData.rejectReason = reason; // Add the reject reason only if the status is "rejected"
+      updateData.rejectReason = reason;
     }
 
     // Update the seed request document in MongoDB
