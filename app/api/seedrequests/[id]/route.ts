@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
-export async function PATCH(
+export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
@@ -35,9 +35,11 @@ export async function PATCH(
     }
 
     // Update the seed request document in MongoDB
-    const updatedRequest = await SeedRequest.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    const updatedRequest = await SeedRequest.findOneAndUpdate(
+      { _id: id }, // Query by ID
+      { $set: updateData }, // Update fields
+      { new: true } // Return the updated document
+    );
 
     if (!updatedRequest) {
       return NextResponse.json(
