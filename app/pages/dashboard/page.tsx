@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
-import { Typography, Card, Row, Col, Statistic, Spin } from "antd";
+import { Card, Row, Col, Statistic, Spin } from "antd";
 import { FiUsers, FiFileText, FiCheckCircle, FiClock, FiTag } from "react-icons/fi";
-
-const { Title, Paragraph } = Typography;
 
 const Dashboard = () => {
   const [data, setData] = useState({
@@ -18,6 +16,10 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
 
+  interface RequestData {
+    status: string;
+  }
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,22 +27,22 @@ const Dashboard = () => {
           fetch("/api/seedrequests"),
           fetch("/api/users"),
         ]);
-
-        const requestsData = await requestsRes.json();
-        const usersData = await usersRes.json();
-
-        // ✅ Calculate stats
+  
+        const requestsData: RequestData[] = await requestsRes.json();
+        const usersData: any[] = await usersRes.json();
+  
+        // ✅ Use typed filtering
         const totalRequests = requestsData.length;
-        const pendingRequests = requestsData.filter((r: any) => r.status === "pending").length;
-        const approvedRequests = requestsData.filter((r: any) => r.status === "approved").length;
-        const releasedRequests = requestsData.filter((r: any) => r.status === "released").length; // ✅ New
+        const pendingRequests = requestsData.filter((r) => r.status === "pending").length;
+        const approvedRequests = requestsData.filter((r) => r.status === "approved").length;
+        const releasedRequests = requestsData.filter((r) => r.status === "released").length;
         const totalUsers = usersData.length;
-
+  
         setData({
           totalRequests,
           pendingRequests,
           approvedRequests,
-          releasedRequests, // ✅ New
+          releasedRequests,
           totalUsers,
         });
       } catch (error) {
@@ -49,9 +51,9 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
-  }, []);
+  }, []);  
 
   return (
     <Layout>
