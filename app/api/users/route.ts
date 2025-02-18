@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
 
-    // Build query with proper typing
-    const query: Record<string, any> = {};
+    // Define a more specific type for query
+    const query: { role?: string } = {};
     if (role) {
       query.role = role;
     }
