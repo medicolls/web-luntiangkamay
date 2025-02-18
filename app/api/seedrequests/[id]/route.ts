@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
+// Use Next.js Route Parameters type
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Record<string, string> }
 ) {
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
 
     // Extract the ID from the route params
-    const { id } = params;
+    const id = params.id;
 
     if (!id) {
       return NextResponse.json({ message: "Missing ID in request" }, { status: 400 });
@@ -35,11 +36,9 @@ export async function PUT(
     }
 
     // Update the seed request document in MongoDB
-    const updatedRequest = await SeedRequest.findOneAndUpdate(
-      { _id: id }, // Query by ID
-      { $set: updateData }, // Update fields
-      { new: true } // Return the updated document
-    );
+    const updatedRequest = await SeedRequest.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     if (!updatedRequest) {
       return NextResponse.json(
