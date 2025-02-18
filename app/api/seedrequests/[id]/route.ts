@@ -2,14 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
-// Define context type explicitly
-interface Context {
-  params: {
-    id: string;
-  };
-}
-
-export async function PATCH(request: NextRequest, { params }: Context) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     console.log("Connecting to MongoDB...");
     await dbConnect();
