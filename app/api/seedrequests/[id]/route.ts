@@ -6,6 +6,11 @@ interface RouteParams {
   params: { id: string };
 }
 
+interface UpdateData {
+  status: string;
+  rejectReason?: string;
+}
+
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     await dbConnect();
@@ -29,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const updateData: Record<string, any> = { status };
+    const updateData: UpdateData = { status };
     if (status === "rejected" && reason) {
       updateData.rejectReason = reason;
     }
