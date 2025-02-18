@@ -2,23 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import SeedRequest from "@/models/SeedRequest";
 
-// Use Next.js Route Parameters type
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Record<string, string> }
-) {
+interface RouteParams {
+  params: { id: string };
+}
+
+export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    console.log("Connecting to MongoDB...");
     await dbConnect();
 
-    // Extract the ID from the route params
     const id = params.id;
 
     if (!id) {
-      return NextResponse.json({ message: "Missing ID in request" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing ID in request" },
+        { status: 400 }
+      );
     }
 
-    // Parse the request body
     const body = await request.json();
     const { status, reason } = body;
 
@@ -29,15 +29,14 @@ export async function PUT(
       );
     }
 
-    // Prepare the update data
-    const updateData: Record<string, string> = { status };
+    const updateData: Record<string, any> = { status };
     if (status === "rejected" && reason) {
       updateData.rejectReason = reason;
     }
 
-    // Update the seed request document in MongoDB
     const updatedRequest = await SeedRequest.findByIdAndUpdate(id, updateData, {
       new: true,
+      runValidators: true,
     });
 
     if (!updatedRequest) {
@@ -47,12 +46,10 @@ export async function PUT(
       );
     }
 
-    console.log("Seed request updated:", updatedRequest);
     return NextResponse.json(updatedRequest, { status: 200 });
   } catch (error) {
-    console.error("Error updating seed request:", error);
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: "Internal server error", error },
       { status: 500 }
     );
   }
