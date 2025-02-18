@@ -5,19 +5,26 @@ import SeedRequest from "@/models/SeedRequest";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } } 
 ) {
   try {
-    // Ensure MongoDB connection is established before proceeding
+    // Ensure MongoDB connection
     if (mongoose.connection.readyState === 0) {
       await dbConnect();
     }
 
-    const id = params.id;
+    const { id } = context.params; 
 
     if (!id) {
       return NextResponse.json(
         { message: "Missing ID in request" },
+        { status: 400 }
+      );
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { message: "Invalid ID format" },
         { status: 400 }
       );
     }
@@ -28,14 +35,6 @@ export async function PUT(
     if (!status) {
       return NextResponse.json(
         { message: "Missing status in request body" },
-        { status: 400 }
-      );
-    }
-
-    // Ensure the ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { message: "Invalid ID format" },
         { status: 400 }
       );
     }
@@ -58,9 +57,15 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedRequest, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) { // ✅ Explicitly set error as unknown
+    let errorMessage = "An unknown error occurred";
+
+    if (error instanceof Error) { // ✅ Type check for Error object
+      errorMessage = error.message;
+    }
+
     return NextResponse.json(
-      { message: "Internal server error", error: error.message },
+      { message: "Internal server error", error: errorMessage }, 
       { status: 500 }
     );
   }
