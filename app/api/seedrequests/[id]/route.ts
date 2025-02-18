@@ -18,7 +18,8 @@ export async function PATCH(
     }
 
     // Parse the request body
-    const { status, reason } = await request.json();
+    const body = await request.json();
+    const { status, reason } = body;
 
     if (!status) {
       return NextResponse.json(
