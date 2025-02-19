@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "./Sidebar";
 import { Layout as AntLayout, Avatar, Button, Typography, Space } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
@@ -10,8 +11,16 @@ const { Header, Content, Sider } = AntLayout;
 const { Title } = Typography;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const router = useRouter(); // ✅ Initialize router
+
   const handleLogout = () => {
-    console.log("User logged out");
+    // ✅ Clear authentication token (if stored in localStorage or sessionStorage)
+    localStorage.removeItem("authToken"); 
+    sessionStorage.removeItem("authToken");
+
+    router.push("/");
+
+    console.log("User logged out successfully");
   };
 
   return (
@@ -22,7 +31,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         style={{
           backgroundColor: "#003300",
           minHeight: "100vh",
-          position: "fixed", // Keeps the sidebar fixed
+          position: "fixed",
           left: 0,
           top: 0,
           bottom: 0,
@@ -32,7 +41,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </Sider>
 
       {/* Main Layout for Header & Content */}
-      <AntLayout style={{ marginLeft: 250 }}> {/* Push content due to fixed sidebar */}
+      <AntLayout style={{ marginLeft: 250 }}>
         {/* Header */}
         <Header
           style={{
@@ -44,7 +53,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             borderBottom: "1px solid #ddd",
             position: "sticky",
             top: 0,
-            zIndex: 1000, // Keeps the header above other elements
+            zIndex: 1000,
           }}
         >
           <Title level={4} style={{ margin: 0 }}>Admin Panel</Title>
@@ -65,17 +74,17 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Space>
         </Header>
 
-        {/* Content Area (Fixed height, scrollable inside content) */}
+        {/* Content Area */}
         <Content
           style={{
             padding: "24px",
             margin: "24px 16px",
             backgroundColor: "#fff",
-            minHeight: "calc(100vh - 64px)", // Takes full height minus header
-            overflowY: "auto", // Allows scrolling inside content if needed
+            minHeight: "calc(100vh - 64px)",
+            overflowY: "auto",
           }}
         >
-          {children} {/* Ensures page content renders correctly */}
+          {children}
         </Content>
       </AntLayout>
     </AntLayout>
