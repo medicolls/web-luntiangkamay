@@ -60,12 +60,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
           <Space size="large">
             {/* Profile Link */}
-            <Link href="/pages/profile" style={{ textDecoration: "none" }}>
+            { /* <Link href="/pages/profile" style={{ textDecoration: "none" }}>
               <Space>
                 <Avatar size="large" icon={<UserOutlined />} />
                 <span style={{ fontSize: "14px", fontWeight: 500, color: "#333" }}>Profile</span>
               </Space>
-            </Link>
+            </Link> */}
 
             {/* Logout Button */}
             <Button type="primary" danger icon={<LogoutOutlined />} onClick={handleLogout}>
